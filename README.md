@@ -65,3 +65,22 @@ for k, v in vocab.items():
 Закодируем все описания и добавим их в датафрейм:
 
 ![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/table1.png)
+
+## Готовим данные к обучению
+Посчитаем среднюю длинну описания, чтобы определить длинну последовательности
+
+```python
+train_df['description_len'] = train_df['description_encoded'].apply (len)
+
+print ('минимальная длина описания:', train_df.description_len.min())
+print ('средняя длина описания:', round(train_df.description_len.mean()))
+print ('максимальная длина описания:', train_df.description_len.max())
+
+plt.hist(train_df.description_len, density = True)
+
+>>> минимальная длина описания: 3
+    средняя длина описания: 92
+    максимальная длина описания: 487
+```
+
+![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/graph3.png)
