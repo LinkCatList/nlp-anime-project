@@ -55,5 +55,10 @@ mini_vocab = {}
 for k, v in vocab.items():
   if v<10000:
     mini_vocab[k] = v
-mini_vocab
+
 ```
+
+Напишем функцию кодировки и декодировки описаний.      
+Закодируем все описания и добавим их в датафрейм:
+
+![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/table1.png)
