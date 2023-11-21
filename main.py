@@ -1,4 +1,4 @@
-# 54%
+# 70%
 
 import pandas as pd
 import numpy as np
@@ -15,30 +15,22 @@ import random
 train_df['genres'] = train_df['genres'].astype(str)
 
 train_df['genres'] = train_df['genres'].str.split(', ')
-train_df['first_genre'] = train_df['genres'].apply(lambda x: x[0])
-train_df['second_genre'] = train_df['genres'].apply(lambda x: x[1] if len(x) > 1 else x[0])
-train_df = train_df.drop(columns=['genres'])
+train_df['genre'] = train_df['genres'].apply(lambda x: x[0])
 
 train_df['Id'] = pd.Series([i for i in range(train_df.shape[0])])
 train_df
 
-genre_count_df = train_df[['Id','first_genre']].groupby('first_genre').agg('count').sort_values('Id', ascending = False)
+genre_count_df = train_df[['Id','genre']].groupby('genre').agg('count').sort_values('Id', ascending = False)
 
 genre_count_df.reset_index(inplace = True)
 genre_count_df.rename(columns ={'Id':'genre_cnt'}, inplace = True)
 
-genre_count_df.plot.bar(y = 'genre_cnt', x = 'first_genre')
+genre_count_df.plot.bar(y = 'genre_cnt', x = 'genre')
 
-genre_count_df = train_df[['Id','second_genre']].groupby('second_genre').agg('count').sort_values('Id', ascending = False)
-
-genre_count_df.reset_index(inplace = True)
-genre_count_df.rename(columns ={'Id':'genre_cnt'}, inplace = True)
-
-genre_count_df.plot.bar(y = 'genre_cnt', x = 'second_genre')
 
 genre_count_df
 
-train_df = train_df.merge(genre_count_df, how = 'left', left_on='second_genre', right_on='second_genre')
+train_df = train_df.merge(genre_count_df, how = 'left', left_on='genre', right_on='genre')
 
 train_df
 
@@ -52,13 +44,13 @@ test_df =  pd.read_csv('/content/anime-description.csv')# тут нужно им
 test_df['genres'] = test_df['genres'].astype(str)
 
 test_df['genres'] = test_df['genres'].str.split(', ')
-test_df['first_genre'] = test_df['genres'].apply(lambda x: x[0])
-test_df['second_genre'] = test_df['genres'].apply(lambda x: x[1] if len(x) > 1 else x[0])
+test_df['genre'] = test_df['genres'].apply(lambda x: x[0])
+test_df['genre'] = test_df['genres'].apply(lambda x: x[1] if len(x) > 1 else x[0])
 test_df = test_df.drop(columns=['genres'])
 
 test_df['Id'] = pd.Series([i for i in range(test_df.shape[0])])
 
-test_df = test_df.merge(genre_count_df, how = 'left', left_on='second_genre', right_on='second_genre')
+test_df = test_df.merge(genre_count_df, how = 'left', left_on='genre', right_on='genre')
 
 test_df
 
@@ -122,12 +114,10 @@ test_df['description_encoded'] = test_df['description_tokenized'].apply(lambda x
 test_df
 
 train_data = train_df.description_encoded.to_numpy()
-train_first_label = pd.get_dummies(train_df['first_genre']).values
-train_second_label = pd.get_dummies(train_df['second_genre']).values
+train_label = pd.get_dummies(train_df['genre']).values
 
 test_data = test_df.description_encoded.to_numpy()
-test_first_label = pd.get_dummies(test_df['first_genre']).values
-test_second_label = pd.get_dummies(test_df['second_genre']).values
+test_label = pd.get_dummies(test_df['genre']).values
 
 train_df['description_len'] = train_df['description_encoded'].apply (len)
 
@@ -158,8 +148,8 @@ print('Тестовые данные:')
 print(test_data.shape)
 print(test_data[0])
 
-partial_x_train, x_val, partial_y_train, y_val = train_test_split(train_data, train_second_label,
-                                                                  test_size = 0.05, random_state = 42)
+partial_x_train, x_val, partial_y_train, y_val = train_test_split(train_data, train_label,
+                                                                  test_size = 0.10, random_state = 42)
 
 
 print(partial_x_train.shape, partial_y_train.shape)
@@ -172,9 +162,9 @@ CLASS_NUM = y_val.shape[1]
 model = tf.keras.Sequential([
     tf.keras.layers.Embedding(VOCAB_SIZE, EMB_SIZE),
     tf.keras.layers.Bidirectional(
-        tf.keras.layers.LSTM(EMB_SIZE, return_sequences=True, dropout=0.3, recurrent_dropout=0.5)),
+        tf.keras.layers.LSTM(EMB_SIZE, return_sequences=True, dropout=0.5, recurrent_dropout=0.5)),
     tf.keras.layers.Bidirectional(
-        tf.keras.layers.LSTM(EMB_SIZE, return_sequences=False, dropout=0.3, recurrent_dropout=0.5)),
+        tf.keras.layers.LSTM(EMB_SIZE, return_sequences=False, dropout=0.5, recurrent_dropout=0.5)),
     tf.keras.layers.Dense(CLASS_NUM, activation= 'softmax'),
 ])
 model.summary()
@@ -211,7 +201,11 @@ plt.ylabel('Accuracy')
 plt.legend()
 plt.grid()
 
-results = model.evaluate(test_data, test_first_label)
+test_data
+
+test_label
+
+results = model.evaluate(test_data, test_label)
 
 print('Test loss: {:.4f}'.format(results[0]))
 print('Test accuracy: {:.2f} %'.format(results[1]*100))
