@@ -2,6 +2,9 @@
 
 Цель - создать нейронную сеть, которая будет по описанию аниме определять его возможный жанр.
 
+<img src="https://github.com/zavman58/nlp-anime-project/blob/main/pic/tyan.png" width="200" height="250">
+
+
 ## Загрузка и первоначальная обработка данных
 Загружаем данные для обучения по [ссылке](https://github.com/LinkCatList/nlp-anime-project/blob/main/datasets/anime-description.csv)  
    
