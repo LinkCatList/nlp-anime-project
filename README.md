@@ -10,10 +10,9 @@
    
 Для каждого аниме сохраним два основых жанра
 ```python
-data['genres'] = data['genres'].str.split(', ')
-data['first_genre'] = data['genres'].apply(lambda x: x[0])
-data['second_genre'] = data['genres'].apply(lambda x: x[1] if len(x) > 1 else x[0])
-data = data.drop(columns=['genres'])
+train_df['genres'] = train_df['genres'].str.split(', ')
+train_df['first_genre'] = train_df['genres'].apply(lambda x: x[0])
+train_df['second_genre'] = train_df['genres'].apply(lambda x: x[1] if len(x) > 1 else x[0])
 ```
 Посмотрим на графики распределения первого и второго жанров:
 
@@ -25,7 +24,7 @@ data = data.drop(columns=['genres'])
 
 ```python
 min_cnt = 1000
-data = data[data['genre_cnt'] > min_cnt]
+train_df = train_df[train_df['genre_cnt'] > min_cnt]
 ```
 
 ## Подготовка данных для модели
@@ -38,13 +37,13 @@ def tokenize_text(text):
 ```
 
 ```python
-test_data['description_tokenized'] = test_data['description'].apply(lambda x:tokenize_text(x))
-test_data['description_tokenized'] = test_data['description'].apply(lambda x:tokenize_text(x))
+train_df['description_tokenized'] = train_df['description'].apply(lambda x:tokenize_text(x))
+test_df['description_tokenized'] = test_df['description'].apply(lambda x:tokenize_text(x))
 ```
 
 Теперь для каждого слова посчитаем количество вхождений во все описания:
 ```python
-for tokens in test_data['description_tokenized']:
+for tokens in train_df['description_tokenized']:
   for word in tokens:
     if word not in vocab.keys():
       vocab[word] = 1
