@@ -2,7 +2,7 @@
 
 Цель - создать нейронную сеть, которая будет по описанию аниме определять его возможный жанр.
 
-<img src="https://github.com/zavman58/nlp-anime-project/blob/main/pic/tyan.png" width="200" height="250"> <img src="https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/tyan2.png" width="200" height="250"> <img src="https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/tyan3.png" width="200" height="250"> <img src="https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/tyan4.png" width="200" height="250">
+<img src="https://github.com/zavman58/nlp-anime-project/blob/main/pic/tyan.png" width="200" height="250"> <img src="https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/tyan2.png" width="200" height="250"> <img src="https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/tyan3.png" width="200" height="250"> <img src="https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/tyan4.jpg" width="250" height="250">
 
 
 ## Загрузка и первоначальная обработка данных
