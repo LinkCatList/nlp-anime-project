@@ -191,9 +191,8 @@ results = model.evaluate(test_data, test_label)
 ```
 
 
-
-
-
+![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/graf6.png)
+![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/graf7.png)
 
 
 
