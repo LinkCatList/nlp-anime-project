@@ -66,7 +66,7 @@ for k, v in vocab.items():
 ![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/table1.png)
 
 ## Готовим данные к обучению
-Посчитаем среднюю длинну описания, чтобы определить длинну последовательности
+Посчитаем среднюю длину описания, чтобы определить длнну последовательности
 
 ```python
 train_df['description_len'] = train_df['description_encoded'].apply (len)
@@ -83,3 +83,122 @@ plt.hist(train_df.description_len, density = True)
 ```
 
 ![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/graph3.png)
+
+Для каждого датасета применим pad_sequences, для того чтобы длины тензоров были одиковые (иначе модель будет жаловаться). Дополним их незначащими нулями в конце
+
+```python
+MAX_SEQ_LEN = 70
+
+train_data = tf.keras.preprocessing.sequence.pad_sequences(
+    train_data,
+    value= vocab['<PAD>'],
+    padding= 'post',
+    maxlen= MAX_SEQ_LEN)
+
+test_data = tf.keras.preprocessing.sequence.pad_sequences(
+    test_data,
+    value= vocab['<PAD>'],
+    padding= 'post',
+    maxlen= MAX_SEQ_LEN)
+
+>>>Тренировочные данные:
+[   4  678  580    2    2   23    2   40    5   89  296    2   10 1689
+  347    2 1562 4625    2    9 2074    5 3090 5733    8 4321    2   82
+    3  879    6    3    2   60   56   35    2    3   57  613    3 2342
+   51    8 1343    9   17   25   48 3002    2  281 1166  448   17 2854
+ 4625    7   10  160  365    4    3  281   82    5   44 2534 1724   55]
+
+   Тестовые данные:
+[   1  218   21 1110 1026   22    2    3 8804   27    2   30   40    8
+    5  942    6 2891    2    8 1273 1301   14    2    9  870 6425    8
+    3 1110   72 2503    7   40   54   19    3  238   11   76    0    0
+    0    0    0    0    0    0    0    0    0    0    0    0    0    0
+    0    0    0    0    0    0    0    0    0    0    0    0    0    0]
+```
+
+## Обучаем модель
+
+Разбиваем на тренировочную и тестовую выборки 
+
+```python
+partial_x_train, x_val, partial_y_train, y_val = train_test_split(train_data, train_label,
+                                                                  test_size = 0.10, random_state = 42)
+```
+
+Создадим объект model и пропишем архитектуру
+
+```python
+EMB_SIZE = 32
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Embedding(VOCAB_SIZE, EMB_SIZE),
+    tf.keras.layers.Bidirectional(
+        tf.keras.layers.LSTM(EMB_SIZE, return_sequences=True, dropout=0.1, recurrent_dropout=0.1)),
+    tf.keras.layers.Bidirectional(
+        tf.keras.layers.LSTM(EMB_SIZE, return_sequences=True, dropout=0.2, recurrent_dropout=0.1)),
+    tf.keras.layers.Bidirectional(
+        tf.keras.layers.LSTM(EMB_SIZE, return_sequences=False, dropout=0.2, recurrent_dropout=0.1)),
+    tf.keras.layers.Dense(CLASS_NUM, activation= 'softmax'),
+])
+
+
+
+>>>
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ embedding (Embedding)       (None, None, 32)          320000    
+                                                                 
+ bidirectional (Bidirection  (None, None, 64)          16640     
+ al)                                                             
+                                                                 
+ bidirectional_1 (Bidirecti  (None, None, 64)          24832     
+ onal)                                                           
+                                                                 
+ bidirectional_2 (Bidirecti  (None, 64)                24832     
+ onal)                                                           
+                                                                 
+ dense (Dense)               (None, 10)                650       
+                                                                 
+=================================================================
+Total params: 386954 (1.48 MB)
+Trainable params: 386954 (1.48 MB)
+Non-trainable params: 0 (0.00 Byte)
+_________________________________________________________________
+```
+
+
+Приступаем к обучению сетки
+
+```python
+BATCH_SIZE = 64
+NUM_EPOCHS = 30
+
+cpt_path = 'data/14_text_classifier.hdf5'
+checkpoint = tf.keras.callbacks.ModelCheckpoint(cpt_path, monitor='acc', verbose=1, save_best_only= True, mode='max')
+
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
+
+history = model.fit(partial_x_train, partial_y_train, validation_data= (x_val, y_val),
+                   epochs= NUM_EPOCHS, batch_size= BATCH_SIZE, verbose= 1,
+                   callbacks=[checkpoint])
+```
+
+Ждемс пару часиков и смотрим на result:
+
+```python
+results = model.evaluate(test_data, test_label)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
