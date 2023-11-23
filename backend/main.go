@@ -31,8 +31,6 @@ func main() {
 	})
 	http.HandleFunc("/postform", func(w http.ResponseWriter, r *http.Request) {
 
-		// TODO: проверить, что пользователь уже существует
-
 		name := r.FormValue("userlogin")
 		password := r.FormValue("userpassword")
 
@@ -54,6 +52,36 @@ func main() {
 			}
 			http.ServeFile(w, r, "static/about.html")
 		}
+	})
+	http.HandleFunc("/bebrik", func(w http.ResponseWriter, r *http.Request) {
+
+		// TODO: проверить, существует ли аккаунт DONE
+
+		name := r.FormValue("userlogin")
+		password := r.FormValue("userpassword")
+
+		var count int
+		err2 := db.QueryRow("SELECT COUNT(*) FROM USER WHERE LOGIN = $1", name).Scan(&count)
+		if err2 != nil {
+			panic(err2)
+		}
+
+		// TODO: проверить, совпадает ли введенный пароль и проль в бд DONE
+
+		if count > 0 {
+			var cellContent string
+			err3 := db.QueryRow("SELECT PASSWORD FROM USER WHERE LOGIN = $1", name).Scan(&cellContent)
+			if err3 != nil {
+				panic(err3)
+			}
+			if cellContent != password {
+				http.ServeFile(w, r, "static/not_find.html")
+			}
+			http.ServeFile(w, r, "static/index.html")
+		} else {
+			http.ServeFile(w, r, "static/not_find.html")
+		}
+		fmt.Println(name, password)
 	})
 	http.HandleFunc("/login.html", func(w http.ResponseWriter, r *http.Request) {
 
