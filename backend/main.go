@@ -26,6 +26,9 @@ func main() {
 	http.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "static/about.html")
 	})
+	http.HandleFunc("/register.html", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/register.html")
+	})
 	http.HandleFunc("/postform", func(w http.ResponseWriter, r *http.Request) {
 
 		// TODO: проверить, что пользователь уже существует
