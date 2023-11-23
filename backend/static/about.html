@@ -6,19 +6,34 @@
                 background-image: url('https://02ch.in/assets/images/src/71917a53323d20a027ceee9480589048c58c9b2f.gif');
                 background-repeat: no-repeat;
             }
+            .btn {
+                padding: 0.5em 1.5em;
+                background-color: #293948;
+                color: #fff; 
+                border-radius: 0.4em; 
+                border: none; 
+                font-size: 0.9em; 
+                transition: 0.4s; 
+            }
+            .btn:hover {
+                background-color: rgb(199, 96, 194);
+            }
+            .btn:active {
+                background-color: rgb(199, 96, 194);
+            }
         </style>
         <meta charset="UTF-8">
         <title>Сайт для аниме няшек</title>
     </head>
     <body>
         <h1>Сайт для аниме няшек</h1>
-        <h2><small>Нейросеть, позволяющая найти аниме, жанр которого совпадает с введенным описанием</small></h2>
+        <h2>Нейросеть, позволяющая найти аниме, жанр которого совпадает с введенным описанием</h2>
         <form action="http://localhost:8181/register.html">
-            <input type="submit" value="Регистрация 🙂" />
+            <p><button class="btn">Регистрация</button></p>
         </form>
          
         <form action="http://localhost:8181/login.html">
-            <input type="submit" value="Войти😏" />
+            <p><button class="btn">Войти</button></p>
         </form>
     </body>
 </html>
