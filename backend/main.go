@@ -23,21 +23,29 @@ func main() {
 		fmt.Println("OK")
 	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "static/register.html")
+	http.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/about.html")
 	})
 	http.HandleFunc("/postform", func(w http.ResponseWriter, r *http.Request) {
 
+		// TODO: проверить, что пользователь уже существует
+
 		name := r.FormValue("userlogin")
 		password := r.FormValue("userpassword")
-		fmt.Fprintf(w, "Имя: %s Возраст: %s", name, password)
 		_, err := db.Exec("insert into USER(ID, LOGIN, PASSWORD) values (1, $1, $2)", name, password)
 		if err != nil {
 			panic(err)
 		} else {
 			fmt.Println("OK")
 		}
+		http.ServeFile(w, r, "static/about.html")
 	})
+
+	http.HandleFunc("/login.html", func(w http.ResponseWriter, r *http.Request) {
+
+		http.ServeFile(w, r, "static/login.html")
+	})
+
 	fmt.Println("Server is listening...")
 	http.ListenAndServe(":8181", nil)
 }
