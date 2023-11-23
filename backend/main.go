@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -91,7 +94,29 @@ func main() {
 
 		http.ServeFile(w, r, "static/index.html")
 	})
+	http.HandleFunc("/abobus", func(w http.ResponseWriter, r *http.Request) {
+		query := r.FormValue("request")
+		fmt.Println(query)
+		values := map[string]string{"query": query}
+		json_data, err := json.Marshal(values)
 
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		resp, err4 := http.Post("http://127.0.0.1:8080/", "application/json",
+			bytes.NewBuffer(json_data))
+		if err4 != nil {
+			panic(err4)
+		}
+
+		defer resp.Body.Close()
+		var res map[string]interface{}
+		json.NewDecoder(resp.Body).Decode(&res)
+		fmt.Println(res["key"])
+
+		http.ServeFile(w, r, "static/index.html")
+	})
 	fmt.Println("Server is listening...")
 	http.ListenAndServe(":8181", nil)
 }
