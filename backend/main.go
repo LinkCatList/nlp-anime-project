@@ -40,10 +40,13 @@ func main() {
 		}
 		http.ServeFile(w, r, "static/about.html")
 	})
-
 	http.HandleFunc("/login.html", func(w http.ResponseWriter, r *http.Request) {
 
 		http.ServeFile(w, r, "static/login.html")
+	})
+	http.HandleFunc("/index", func(w http.ResponseWriter, r *http.Request) {
+
+		http.ServeFile(w, r, "static/index.html")
 	})
 
 	fmt.Println("Server is listening...")
