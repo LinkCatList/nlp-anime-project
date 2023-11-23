@@ -198,6 +198,38 @@ results = model.evaluate(test_data, test_label)
 78% точности
 
 
+Создадим функцию, которая вовращает предсказание по промту
+
+```python
+def get_result_model(prompt):
+    prompt_tokenize = tokenize_text(prompt)
+
+    prompt_extra = []
+    for i in prompt_tokenize:
+      if i in mini_vocab:
+        prompt_extra.append(i)
+
+    prompt_encode = EncodeTokens(prompt_extra, mini_vocab)
+    prediction = my_model.predict(tf.constant([prompt_encode]))
+
+    return labels[np.argmax(prediction)]
+```
+
+Для примера работы модели возмем аниме "Святой воин Цербер". На jut.su он определяется жанром "приключения" и "фэнтази".
+С того же сайта возьмем описание и дадим в качестве запроса модели (не забываем переводить на английский). 
+
+Смотрим на результат:
+```python
+text = 'Dangerous adventures, massive battles, as well as the use of ancient magic can be seen in the anime "Seisen Cerberus: Ryuukoku no Fatalites". Ahead of Hiro are waiting for difficult training, as well as the search for answers to questions that are related to the sworn enemy. A skilled swordsman together with his companions will meet many enemies and friends who will influence their destinies.'
+
+get_result_model(text)
+
+>>> 'Adventure'
+
+```
+Наша модель молодец, она верно определила жанр аниме
+
+Всем さようなら!
 
 
 
