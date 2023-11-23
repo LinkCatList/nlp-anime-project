@@ -114,8 +114,11 @@ func main() {
 		var res map[string]interface{}
 		json.NewDecoder(resp.Body).Decode(&res)
 		fmt.Println(res["key"])
-
-		http.ServeFile(w, r, "static/index.html")
+		if res["key"] == "Hentai" {
+			http.ServeFile(w, r, "static/hentai.html")
+		} else {
+			http.ServeFile(w, r, "static/comedy.html")
+		}
 	})
 	fmt.Println("Server is listening...")
 	http.ListenAndServe(":8181", nil)
