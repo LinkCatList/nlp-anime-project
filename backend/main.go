@@ -116,8 +116,24 @@ func main() {
 		fmt.Println(res["key"])
 		if res["key"] == "Hentai" {
 			http.ServeFile(w, r, "static/hentai.html")
-		} else {
+		} else if res["key"] == "Comedy" {
 			http.ServeFile(w, r, "static/comedy.html")
+		} else if res["key"] == "Kids" {
+			http.ServeFile(w, r, "static/kids.html")
+		} else if res["key"] == "Drama" {
+			http.ServeFile(w, r, "static/drama.html")
+		} else if res["key"] == "Adventure" {
+			http.ServeFile(w, r, "static/adventure.html")
+		} else if res["key"] == "Fantasy" {
+			http.ServeFile(w, r, "static/fantasy.html")
+		} else if res["key"] == "Sci-Fi" {
+			http.ServeFile(w, r, "static/scifi.html")
+		} else if res["key"] == "Music" {
+			http.ServeFile(w, r, "static/music.html")
+		} else if res["key"] == "Slice" {
+			http.ServeFile(w, r, "static/slice.html")
+		} else if res["key"] == "Action" {
+			http.ServeFile(w, r, "static/action.html")
 		}
 	})
 	fmt.Println("Server is listening...")
