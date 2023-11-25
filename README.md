@@ -230,7 +230,7 @@ get_result_model(text)
 Наша модель молодец, она верно определила жанр аниме
 
 Потыкать нейроночку здесь:
-https://goo.su/anime.nya
+https://clck.ru/36msUD
 
 Всем さようなら!
 
