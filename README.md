@@ -229,8 +229,7 @@ get_result_model(text)
 ```
 Наша модель молодец, она верно определила жанр аниме
 
-Потыкать нейроночку здесь:
-https://nlp-anime-golang-production.up.railway.app/about
+Потыкать нейроночку здесь: https://stevedoh.com/
 
 Всем さようなら!
 
