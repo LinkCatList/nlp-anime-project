@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -27,6 +28,7 @@ func main() {
 	}
 
 	http.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
+
 		http.ServeFile(w, r, "static/about.html")
 	})
 	http.HandleFunc("/register.html", func(w http.ResponseWriter, r *http.Request) {
@@ -104,7 +106,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		resp, err4 := http.Post("http://127.0.0.1:8080/", "application/json",
+		resp, err4 := http.Post("https://web-production-7ddc.up.railway.app/", "application/json",
 			bytes.NewBuffer(json_data))
 		if err4 != nil {
 			panic(err4)
@@ -137,5 +139,9 @@ func main() {
 		}
 	})
 	fmt.Println("Server is listening...")
-	http.ListenAndServe(":8181", nil)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	http.ListenAndServe(":"+port, nil)
 }
