@@ -2,7 +2,7 @@
 
 Цель - создать нейронную сеть, которая будет по описанию аниме определять его возможный жанр.
 
-<img src="https://github.com/zavman58/nlp-anime-project/blob/main/pic/tyan.png" width="200" height="250"> <img src="https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/tyan2.png" width="200" height="250"> <img src="https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/tyan3.png" width="200" height="250"> 
+<img src="https://github.com/LinkCatList/nlp-anime-project/blob/main/nlp-anime-ai/pic/tyan.png" width="200" height="250"> <img src="https://github.com/LinkCatList/nlp-anime-project/blob/main/nlp-anime-ai/pic/tyan2.png" width="200" height="250"> <img src="https://github.com/LinkCatList/nlp-anime-project/blob/main/nlp-anime-ai/pic/tyan3.png" width="200" height="250"> 
 
 
 ## Загрузка и первоначальная обработка данных
@@ -16,9 +16,9 @@ train_df['second_genre'] = train_df['genres'].apply(lambda x: x[1] if len(x) > 1
 ```
 Посмотрим на графики распределения первого и второго жанров:
 
-![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/graph.png)
+![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/nlp-anime-ai/pic/graph.png)
 
-![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/graph2.png)
+![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/nlp-anime-ai/pic/graph2.png)
 
 Для каждого аниме посчитаем сколько раз всего встречается первый жанр + сколько всего раз встречается второй жанр и удалим те, жанры которых встречаются редко
 
@@ -63,7 +63,7 @@ for k, v in vocab.items():
 Напишем функцию кодировки и декодировки описаний.      
 Закодируем все описания и добавим их в датафрейм:
 
-![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/table1.png)
+![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/nlp-anime-ai/pic/table1.png)
 
 ## Готовим данные к обучению
 Посчитаем среднюю длину описания, чтобы определить длнну последовательности
@@ -82,7 +82,7 @@ plt.hist(train_df.description_len, density = True)
     максимальная длина описания: 487
 ```
 
-![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/graph3.png)
+![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/nlp-anime-ai/pic/graph3.png)
 
 Для каждого датасета применим pad_sequences, для того чтобы длины тензоров были одиковые (иначе модель будет жаловаться). Дополним их незначащими нулями в конце
 
@@ -191,9 +191,9 @@ results = model.evaluate(test_data, test_label)
 ```
 
 
-![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/graf6.png)
+![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/nlp-anime-ai/pic/graf6.png)
 
-![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/graph7.png)
+![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/nlp-anime-ai/pic/graf7.png)
 
 78% точности
 
