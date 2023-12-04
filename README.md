@@ -193,7 +193,7 @@ results = model.evaluate(test_data, test_label)
 
 ![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/nlp-anime-ai/pic/graf6.png)
 
-![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/nlp-anime-ai/pic/graf7.png)
+![alt text](https://github.com/LinkCatList/nlp-anime-project/blob/main/nlp-anime-ai/pic/graph7.png)
 
 78% точности
 
