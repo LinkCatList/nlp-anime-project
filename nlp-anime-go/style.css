@@ -1,0 +1,40 @@
+body{
+    background-image: url('https://02ch.in/assets/images/src/71917a53323d20a027ceee9480589048c58c9b2f.gif');
+    background-repeat: no-repeat;
+    background-position: 42% 25px;
+    font-family: 'Raleway', sans-serif, Arial, Helvetica, sans-serif;
+}
+.btn {
+    padding: 0.5em 1.5em;
+    background-color: #293948;
+    color: #fff; 
+    border-radius: 0.4em; 
+    border: none; 
+    font-size: 0.9em; 
+    transition: 0.4s; 
+}
+.btn:hover {
+    background-color: rgb(199, 96, 194);
+}
+.btn:active {
+    background-color: rgb(199, 96, 194);
+}
+.header {
+    text-align: center;
+    margin-top: 2em;
+}
+.main {
+    text-align: center;
+    margin-top: 2em;
+}
+.h2 {
+    margin-top: 25px;
+}
+.footer {
+}
+.footer h2 {
+    margin-bottom: 25px;
+    margin-top: 20px;
+    font-weight: 600;
+    text-align: center;
+}

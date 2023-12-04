@@ -1,0 +1,11 @@
+pandas
+numpy
+nltk
+matplotlib
+scikit-learn
+tensorflow
+keras
+googletrans
+fastapi
+requests
+uvicorn
