@@ -62,7 +62,6 @@ func main() {
 	})
 	http.HandleFunc("/bebrik", func(w http.ResponseWriter, r *http.Request) {
 
-		// TODO: проверить, существует ли аккаунт DONE
 
 		name := r.FormValue("userlogin")
 		password := r.FormValue("userpassword")
@@ -73,7 +72,6 @@ func main() {
 			panic(err2)
 		}
 
-		// TODO: проверить, совпадает ли введенный пароль и проль в бд DONE
 
 		if count > 0 {
 			var cellContent string
