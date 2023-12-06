@@ -7,21 +7,18 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
 	db, err := sql.Open("sqlite3", "test.db")
-
 	if err != nil {
 		panic(err)
 	} else {
 		fmt.Println("OK")
 	}
-
-	ok, err := db.Exec("CREATE TABLE USER(ID INTEGER,LOGIN TEXT,PASSWORD TEXT);")
+	ok, err := db.Exec("CREATE TABLE IF NOT EXISTS USER(ID INTEGER,LOGIN TEXT,PASSWORD TEXT);")
 	if err != nil {
 		panic(err)
 		fmt.Println(ok.LastInsertId())
@@ -29,7 +26,7 @@ func main() {
 		fmt.Println("OK")
 	}
 
-	http.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 		http.ServeFile(w, r, "static/about.html")
 	})
@@ -62,6 +59,7 @@ func main() {
 	})
 	http.HandleFunc("/bebrik", func(w http.ResponseWriter, r *http.Request) {
 
+		// TODO: проверить, существует ли аккаунт DONE
 
 		name := r.FormValue("userlogin")
 		password := r.FormValue("userpassword")
@@ -72,6 +70,7 @@ func main() {
 			panic(err2)
 		}
 
+		// TODO: проверить, совпадает ли введенный пароль и проль в бд DONE
 
 		if count > 0 {
 			var cellContent string
@@ -106,7 +105,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		resp, err4 := http.Post("https://web-production-7ddc.up.railway.app/", "application/json",
+		resp, err4 := http.Post("http://localhost:3000/", "application/json",
 			bytes.NewBuffer(json_data))
 		if err4 != nil {
 			panic(err4)
@@ -139,9 +138,5 @@ func main() {
 		}
 	})
 	fmt.Println("Server is listening...")
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-	http.ListenAndServe(":"+port, nil)
+	http.ListenAndServe(":"+"3001", nil)
 }
