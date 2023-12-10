@@ -18,7 +18,7 @@ func main() {
 	} else {
 		fmt.Println("OK")
 	}
-	ok, err := db.Exec("CREATE TABLE IF NOT EXISTS USER(ID INTEGER,LOGIN TEXT,PASSWORD TEXT);")
+	ok, err := db.Exec("CREATE TABLE IF NOT EXISTS USER(ID INTEGER,LOGIN TEXT,PASSWORD TEXT, RANK INTEGER);")
 	if err != nil {
 		panic(err)
 		fmt.Println(ok.LastInsertId())
@@ -48,7 +48,7 @@ func main() {
 			http.ServeFile(w, r, "static/used.html")
 		} else {
 			fmt.Println("new user ", name)
-			_, err := db.Exec("insert into USER(ID, LOGIN, PASSWORD) values (1, $1, $2)", name, password)
+			_, err := db.Exec("insert into USER(ID, LOGIN, PASSWORD, RANK) values (1, $1, $2, 0)", name, password)
 			if err != nil {
 				panic(err)
 			} else {
