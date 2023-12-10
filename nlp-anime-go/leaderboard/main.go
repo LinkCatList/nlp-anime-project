@@ -39,7 +39,7 @@ func main() {
 		fmt.Println("Ok insert user")
 	}
 	h1 := func(w http.ResponseWriter, r *http.Request) {
-		templ := template.Must(template.ParseFiles("index.html"))
+		templ := template.Must(template.ParseFiles("leaderboard.html"))
 		rows, err := db.Query("SELECT * FROM USER")
 		if err != nil {
 			panic(err)
