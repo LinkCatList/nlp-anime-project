@@ -5,11 +5,18 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
+	"sort"
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+type User struct {
+	Login string
+	Rank  int
+}
 
 func main() {
 	db, err := sql.Open("sqlite3", "test.db")
@@ -18,7 +25,7 @@ func main() {
 	} else {
 		fmt.Println("OK")
 	}
-	ok, err := db.Exec("CREATE TABLE IF NOT EXISTS USER(ID INTEGER,LOGIN TEXT,PASSWORD TEXT);")
+	ok, err := db.Exec("CREATE TABLE IF NOT EXISTS USER(ID INTEGER,LOGIN TEXT,PASSWORD TEXT, RANK INTEGER);")
 	if err != nil {
 		panic(err)
 		fmt.Println(ok.LastInsertId())
@@ -48,7 +55,7 @@ func main() {
 			http.ServeFile(w, r, "static/used.html")
 		} else {
 			fmt.Println("new user ", name)
-			_, err := db.Exec("insert into USER(ID, LOGIN, PASSWORD) values (1, $1, $2)", name, password)
+			_, err := db.Exec("insert into USER(ID, LOGIN, PASSWORD, RANK) values (1, $1, $2, 0)", name, password)
 			if err != nil {
 				panic(err)
 			} else {
@@ -59,7 +66,6 @@ func main() {
 	})
 	http.HandleFunc("/bebrik", func(w http.ResponseWriter, r *http.Request) {
 
-
 		name := r.FormValue("userlogin")
 		password := r.FormValue("userpassword")
 
@@ -68,7 +74,6 @@ func main() {
 		if err2 != nil {
 			panic(err2)
 		}
-
 
 		if count > 0 {
 			var cellContent string
@@ -135,6 +140,37 @@ func main() {
 			http.ServeFile(w, r, "static/action.html")
 		}
 	})
+	h1 := func(w http.ResponseWriter, r *http.Request) {
+		templ := template.Must(template.ParseFiles("leaderboard.html"))
+		rows, err := db.Query("SELECT * FROM USER")
+		if err != nil {
+			panic(err)
+		}
+
+		bebra := []User{}
+		for rows.Next() {
+			var id, rank int
+			var login, password string
+			err := rows.Scan(&id, &login, &password, &rank)
+			if err != nil {
+				panic(err)
+			}
+			bebra = append(bebra, User{login, rank})
+		}
+		fmt.Println(bebra)
+
+		sort.SliceStable(bebra, func(i, j int) bool {
+			return bebra[i].Rank > bebra[j].Rank
+		})
+		anime := map[string][]User{"Users": {}}
+		for _, value := range bebra {
+			anime["Users"] = append(anime["Users"], value)
+		}
+		fmt.Println(anime)
+		templ.Execute(w, anime)
+	}
+
+	http.HandleFunc("/raiting", h1)
 	fmt.Println("Server is listening...")
 	http.ListenAndServe(":"+"3001", nil)
 }
