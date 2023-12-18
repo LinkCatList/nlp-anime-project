@@ -141,7 +141,7 @@ func main() {
 		}
 	})
 	h1 := func(w http.ResponseWriter, r *http.Request) {
-		templ := template.Must(template.ParseFiles("leaderboard.html"))
+		templ := template.Must(template.ParseFiles("static/leaderboard.html"))
 		rows, err := db.Query("SELECT * FROM USER")
 		if err != nil {
 			panic(err)
