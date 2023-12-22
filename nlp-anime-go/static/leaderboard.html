@@ -22,6 +22,21 @@
             background: #F5D7BF;
             padding: 10px;
         }
+        .btn {
+                padding: 0.5em 1.5em;
+                background-color: #293948;
+                color: #fff; 
+                border-radius: 0.4em; 
+                border: none; 
+                font-size: 0.9em; 
+                transition: 0.4s; 
+            }
+            .btn:hover {
+                background-color: rgb(199, 96, 194);
+            }
+            .btn:active {
+                background-color: rgb(199, 96, 194);
+            }
     </style>
 </head>
 
@@ -44,4 +59,7 @@
         {{end}}
         
       </table>
+      <form method="POST" action="/">
+        <p><button class="btn">На главную</button></p>
+    </form>
 </body>
