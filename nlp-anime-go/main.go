@@ -84,10 +84,17 @@ func main() {
 			if cellContent != password {
 				http.ServeFile(w, r, "static/not_find.html")
 			}
+			cookie := http.Cookie{
+				Name:  "name",
+				Value: name,
+				Path:  "/",
+			}
+			http.SetCookie(w, &cookie)
 			http.ServeFile(w, r, "static/index.html")
 		} else {
 			http.ServeFile(w, r, "static/not_find.html")
 		}
+
 		fmt.Println(name, password)
 	})
 	http.HandleFunc("/login.html", func(w http.ResponseWriter, r *http.Request) {
@@ -99,6 +106,32 @@ func main() {
 		http.ServeFile(w, r, "static/index.html")
 	})
 	http.HandleFunc("/abobus", func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie("name")
+
+		if err != nil || cookie.Value == "" {
+			http.ServeFile(w, r, "static/login.html")
+			return
+		}
+		var UserName = cookie.Value
+		fmt.Println(UserName)
+		var cnt = 0
+		err5 := db.QueryRow("SELECT RANK FROM USER WHERE LOGIN = $1", UserName).Scan(&cnt)
+		fmt.Println(cnt)
+		cnt++
+		if err5 != nil {
+			panic(err5)
+		} else {
+			fmt.Println("OK")
+		}
+		fmt.Println(UserName)
+		fmt.Println(cnt)
+		_, err6 := db.Exec("UPDATE USER SET RANK = $1 WHERE LOGIN = $2", cnt, UserName)
+		if err6 != nil {
+			panic(err6)
+		} else {
+			fmt.Println("OK")
+		}
+
 		query := r.FormValue("request")
 		fmt.Println(query)
 		values := map[string]string{"query": query}
@@ -118,6 +151,7 @@ func main() {
 		var res map[string]interface{}
 		json.NewDecoder(resp.Body).Decode(&res)
 		fmt.Println(res["key"])
+
 		if res["key"] == "Hentai" {
 			http.ServeFile(w, r, "static/hentai.html")
 		} else if res["key"] == "Comedy" {
