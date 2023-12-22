@@ -1,4 +1,4 @@
-import src.get as gt
+import get as gt
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from fastapi import Request
