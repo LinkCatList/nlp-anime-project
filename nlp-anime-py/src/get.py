@@ -14,9 +14,9 @@ import json
 
 # выгрузим все необходимое и добавим необходимые функции 
 
-my_model = load_model('src/14_text_classifier.hdf5') # изменить путь!!!!!!
+my_model = load_model('14_text_classifier.hdf5') # изменить путь!!!!!!
 
-with open('src/vocab.json', 'r') as f:
+with open('vocab.json', 'r') as f:
     mini_vocab = json.load(f)
 
 
