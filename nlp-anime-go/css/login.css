@@ -1,0 +1,178 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500);
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+}
+html,
+body {
+    background: #1a1f25;
+}
+.clear {
+    clear: both;
+}
+#man-people-user,
+#lock-locker {
+    fill: white;
+}
+.wrapper {
+    width: 350px;
+    margin: 12% auto;
+}
+form {
+    position: relative;
+}
+.clear {
+    clear: both;
+}
+.sign-in {
+    float: left;
+    color: white;
+    font-size: 1.3em;
+}
+.button {
+    float: right;
+    color: #7f8084;
+    border: 1px solid #22272d;
+    padding: 7px 15px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    cursor: pointer;
+}
+.button:hover {
+    color: #d3d3d3;
+}
+.lock {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    margin-top: 10px;
+    padding: 7px;
+    left: 5px;
+}
+.lock::after {
+    content: "";
+    width: 1px;
+    height: 30px;
+    position: absolute;
+    background: #22272d;
+    top: 0px;
+    left: 100%;
+}
+.user {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    margin-top: 10px;
+    padding: 7px;
+    left: 5px;
+}
+.user::after {
+    content: "";
+    width: 1px;
+    height: 30px;
+    position: absolute;
+    background: #22272d;
+    top: 0px;
+    left: 100%;
+}
+input {
+    width: 100%;
+    padding: 5px;
+    height: 40px;
+    margin: 5px 0;
+    border-radius: 10px;
+    outline: none;
+}
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border: 0px solid white;
+    box-shadow: none;
+}
+.user-input:focus .user {
+    background: white !important;
+}
+input[type="text"] {
+    background: #2c323a63;
+    border: 0px solid #2c323a;
+    padding-left: 45px;
+    color: #deb1e9;
+}
+input[type="password"] {
+    background: #2c323a79;
+    border: 0px solid #2c323a;
+    padding-left: 45px;
+    color: #deb1e9;
+}
+input[type="submit"] {
+    background: #c233e6;
+    border: none;
+    color: white;
+    text-align: center;
+    font-size: 0.8em;
+    cursor: pointer;
+}
+input[type="radio"] {
+    display: none;
+}
+.radio-check {
+    width: 50px;
+    height: 20px;
+    border: 1px solid #00000000;
+    border-radius: 30px;
+    margin-top: 10px;
+    float: left;
+    text-align: center;
+    padding: 4px 0;
+    color: #c233e6;
+    font-size: 0.65em;
+    position: relative;
+}
+.radio-check label {
+    margin: 0 2px;
+    cursor: pointer;
+}
+.radio-check .switch-selection {
+    display: block;
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #babbbd;
+    margin-top: -11px;
+    margin-left: 11px;
+    transition: 0.2s ease-out;
+}
+.radio-yes:checked ~ .switch-selection {
+    margin-left: 25px !important;
+}
+.check-label {
+    font-size: 0.8em;
+    color: #7f8084;
+    margin-top: 10px;
+    float: left;
+    padding: 3px 0;
+    margin-left: 10px;
+}
+.forgot-label {
+    font-size: 0.8em;
+    color: #7f8084;
+    margin-top: 10px;
+    float: right;
+    padding: 3px 0;
+    cursor: pointer;
+}
+
+
+.header a {
+    text-decoration: none;
+    cursor:pointer;
+    transition: 0.3s;
+}
+
+.header a:hover {
+    text-decoration: none;
+    cursor:pointer;
+    color: white !important;
+    transition: 0.3s;
+}

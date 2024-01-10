@@ -34,11 +34,13 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-
-		http.ServeFile(w, r, "static/about.html")
+		http.ServeFile(w, r, "html/homepage.html")
 	})
-	http.HandleFunc("/register.html", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "static/register.html")
+
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
+
+	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "html/login.html")
 	})
 	http.HandleFunc("/postform", func(w http.ResponseWriter, r *http.Request) {
 
@@ -90,20 +92,18 @@ func main() {
 				Path:  "/",
 			}
 			http.SetCookie(w, &cookie)
-			http.ServeFile(w, r, "static/index.html")
+			http.ServeFile(w, r, "html/index.html")
 		} else {
 			http.ServeFile(w, r, "static/not_find.html")
 		}
 
 		fmt.Println(name, password)
 	})
-	http.HandleFunc("/login.html", func(w http.ResponseWriter, r *http.Request) {
-
-		http.ServeFile(w, r, "static/login.html")
+	http.HandleFunc("/zalupa_slonika", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "html/index.html")
 	})
-	http.HandleFunc("/index", func(w http.ResponseWriter, r *http.Request) {
-
-		http.ServeFile(w, r, "static/index.html")
+	http.HandleFunc("/comedy", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "html/comedy.html")
 	})
 	http.HandleFunc("/abobus", func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("name")
@@ -175,7 +175,7 @@ func main() {
 		}
 	})
 	h1 := func(w http.ResponseWriter, r *http.Request) {
-		templ := template.Must(template.ParseFiles("static/leaderboard.html"))
+		templ := template.Must(template.ParseFiles("html/lederboard.html"))
 		rows, err := db.Query("SELECT * FROM USER")
 		if err != nil {
 			panic(err)
