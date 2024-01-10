@@ -16,6 +16,7 @@ import (
 type User struct {
 	Login string
 	Rank  int
+	Id    int
 }
 
 func main() {
@@ -42,11 +43,13 @@ func main() {
 	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "html/login.html")
 	})
+	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "html/register.html")
+	})
 	http.HandleFunc("/postform", func(w http.ResponseWriter, r *http.Request) {
-
-		name := r.FormValue("userlogin")
-		password := r.FormValue("userpassword")
-
+		name := r.FormValue("name")
+		password := r.FormValue("password")
+		fmt.Println(name, password)
 		var count int
 		err1 := db.QueryRow("SELECT COUNT(*) FROM USER WHERE LOGIN = $1", name).Scan(&count)
 		if err1 != nil {
@@ -54,7 +57,7 @@ func main() {
 		}
 		if count > 0 {
 			fmt.Println("Exists")
-			http.ServeFile(w, r, "static/used.html")
+			http.ServeFile(w, r, "html/login.html")
 		} else {
 			fmt.Println("new user ", name)
 			_, err := db.Exec("insert into USER(ID, LOGIN, PASSWORD, RANK) values (1, $1, $2, 0)", name, password)
@@ -63,13 +66,13 @@ func main() {
 			} else {
 				fmt.Println("OK")
 			}
-			http.ServeFile(w, r, "static/about.html")
+			http.ServeFile(w, r, "html/homepage.html")
 		}
 	})
 	http.HandleFunc("/bebrik", func(w http.ResponseWriter, r *http.Request) {
 
-		name := r.FormValue("userlogin")
-		password := r.FormValue("userpassword")
+		name := r.FormValue("name")
+		password := r.FormValue("password")
 
 		var count int
 		err2 := db.QueryRow("SELECT COUNT(*) FROM USER WHERE LOGIN = $1", name).Scan(&count)
@@ -84,7 +87,7 @@ func main() {
 				panic(err3)
 			}
 			if cellContent != password {
-				http.ServeFile(w, r, "static/not_find.html")
+				http.ServeFile(w, r, "html/index.html")
 			}
 			cookie := http.Cookie{
 				Name:  "name",
@@ -94,7 +97,7 @@ func main() {
 			http.SetCookie(w, &cookie)
 			http.ServeFile(w, r, "html/index.html")
 		} else {
-			http.ServeFile(w, r, "static/not_find.html")
+			http.ServeFile(w, r, "html/index.html")
 		}
 
 		fmt.Println(name, password)
@@ -109,7 +112,7 @@ func main() {
 		cookie, err := r.Cookie("name")
 
 		if err != nil || cookie.Value == "" {
-			http.ServeFile(w, r, "static/login.html")
+			http.ServeFile(w, r, "html/login.html")
 			return
 		}
 		var UserName = cookie.Value
@@ -153,25 +156,25 @@ func main() {
 		fmt.Println(res["key"])
 
 		if res["key"] == "Hentai" {
-			http.ServeFile(w, r, "static/hentai.html")
+			http.ServeFile(w, r, "html/hentai.html")
 		} else if res["key"] == "Comedy" {
-			http.ServeFile(w, r, "static/comedy.html")
+			http.ServeFile(w, r, "html/comedy.html")
 		} else if res["key"] == "Kids" {
-			http.ServeFile(w, r, "static/kids.html")
+			http.ServeFile(w, r, "html/kids.html")
 		} else if res["key"] == "Drama" {
-			http.ServeFile(w, r, "static/drama.html")
+			http.ServeFile(w, r, "html/drama.html")
 		} else if res["key"] == "Adventure" {
-			http.ServeFile(w, r, "static/adventure.html")
+			http.ServeFile(w, r, "html/adventure.html")
 		} else if res["key"] == "Fantasy" {
-			http.ServeFile(w, r, "static/fantasy.html")
+			http.ServeFile(w, r, "html/fantasy.html")
 		} else if res["key"] == "Sci-Fi" {
-			http.ServeFile(w, r, "static/scifi.html")
+			http.ServeFile(w, r, "html/scifi.html")
 		} else if res["key"] == "Music" {
-			http.ServeFile(w, r, "static/music.html")
+			http.ServeFile(w, r, "html/music.html")
 		} else if res["key"] == "Slice" {
-			http.ServeFile(w, r, "static/slice.html")
+			http.ServeFile(w, r, "html/slice.html")
 		} else if res["key"] == "Action" {
-			http.ServeFile(w, r, "static/action.html")
+			http.ServeFile(w, r, "html/action.html")
 		}
 	})
 	h1 := func(w http.ResponseWriter, r *http.Request) {
@@ -189,7 +192,7 @@ func main() {
 			if err != nil {
 				panic(err)
 			}
-			bebra = append(bebra, User{login, rank})
+			bebra = append(bebra, User{login, rank, 0})
 		}
 		fmt.Println(bebra)
 
@@ -197,16 +200,23 @@ func main() {
 			return bebra[i].Rank > bebra[j].Rank
 		})
 		anime := map[string][]User{"Users": {}}
+		var curId int
 		for _, value := range bebra {
-			anime["Users"] = append(anime["Users"], value)
+			curId++
+			var Ok User
+			Ok.Login = value.Login
+			Ok.Rank = value.Rank
+			Ok.Id = curId
+			anime["Users"] = append(anime["Users"], Ok)
 		}
+
 		fmt.Println(anime)
 		templ.Execute(w, anime)
 	}
 
 	http.HandleFunc("/raiting", h1)
 	fmt.Println("Server is listening...")
-	http.ListenAndServe(":"+"3001", nil)
+	http.ListenAndServe(":"+"8000", nil)
 }
 
 

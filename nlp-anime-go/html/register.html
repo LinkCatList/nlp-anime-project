@@ -54,11 +54,11 @@
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column inner" style="height: 700px !important;">
         <header class="mb-auto">
             <div>
-                <h3 onclick="return location.href = '../html/homepage.html'" class="float-md-start mb-0">🍉Watermelon</h3>
+                <h3 onclick="return location.href = '/'" class="float-md-start mb-0">🍉Watermelon</h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link" aria-current="page" href="../html/index.html">Search</a>
-                    <a class="nav-link" href="../html/lederboard.html">Rating</a>
-                    <a class="nav-link active" href="../html/login.html">Log In</a>
+                    <a class="nav-link" aria-current="page" href="/zalupa_slonika">Search</a>
+                    <a class="nav-link" href="/raiting">Rating</a>
+                    <a class="nav-link active" href="/login">Log In</a>
                 </nav>
             </div>
         </header>
@@ -112,14 +112,14 @@
             <div class="wrapper">
                 <div class="header">
 
-                    <a href="../html/login.html" class="sign-in" style="color:rgb(87, 87, 87)">Sign in</a>
+                    <a href="/login" class="sign-in" style="color:rgb(87, 87, 87)">Sign in</a>
 
                     <a class="sign-in" style="float: right">
                         Register
                     </a>
                 </div>
                 <div class="clear"></div>
-                <form action="#">
+                <form method="POST" action="/postform">
                     <div>
                         <label class="user" for="text">
                             <svg viewBox="0 0 32 32">
@@ -138,7 +138,7 @@
                                 </g>
                             </svg>
                         </label>
-                        <input type="password" name="name" id="name" placeholder="Your password" />
+                        <input type="password" name="password" id="name" placeholder="Your password" />
                     </div>
                     <div>
                         <input type="submit" value="Register" />
