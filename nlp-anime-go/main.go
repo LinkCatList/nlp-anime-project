@@ -49,7 +49,7 @@ func main() {
 	})
 
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
-
+	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("js"))))
 	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "html/login.html")
 	})
@@ -98,7 +98,7 @@ func main() {
 				panic(err3)
 			}
 			if cellContent != password {
-				http.ServeFile(w, r, "html/index.html")
+				http.ServeFile(w, r, "html/login.html")
 			}
 			cookie := http.Cookie{
 				Name:  "name",
@@ -108,7 +108,7 @@ func main() {
 			http.SetCookie(w, &cookie)
 			http.ServeFile(w, r, "html/index.html")
 		} else {
-			http.ServeFile(w, r, "html/index.html")
+			http.ServeFile(w, r, "html/login.html")
 		}
 
 		fmt.Println(name, password)
