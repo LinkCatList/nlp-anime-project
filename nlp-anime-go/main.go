@@ -19,6 +19,16 @@ type User struct {
 	Id    int
 }
 
+func CorrectLogin(s string) string {
+	var t string
+	for _, val := range s {
+		if val != ' ' {
+			t += string(val)
+		}
+	}
+	return t
+}
+
 func main() {
 	db, err := sql.Open("sqlite3", "test.db")
 	if err != nil {
@@ -49,6 +59,7 @@ func main() {
 	http.HandleFunc("/postform", func(w http.ResponseWriter, r *http.Request) {
 		name := r.FormValue("name")
 		password := r.FormValue("password")
+		name = CorrectLogin(name)
 		fmt.Println(name, password)
 		var count int
 		err1 := db.QueryRow("SELECT COUNT(*) FROM USER WHERE LOGIN = $1", name).Scan(&count)
