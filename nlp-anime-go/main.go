@@ -122,6 +122,7 @@ func main() {
 		fmt.Println(cnt)
 		cnt++
 		if err5 != nil {
+			http.ServeFile(w, r, "html/register.html")
 			panic(err5)
 		} else {
 			fmt.Println("OK")
@@ -218,8 +219,6 @@ func main() {
 	fmt.Println("Server is listening...")
 	http.ListenAndServe(":"+"8000", nil)
 }
-
-
 
 /*
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣙⣆⠀⠈⢳⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
