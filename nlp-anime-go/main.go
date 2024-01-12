@@ -2,7 +2,9 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha512"
 	"database/sql"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -61,6 +63,7 @@ func main() {
 		password := r.FormValue("password")
 		name = CorrectLogin(name)
 		fmt.Println(name, password)
+
 		var count int
 		err1 := db.QueryRow("SELECT COUNT(*) FROM USER WHERE LOGIN = $1", name).Scan(&count)
 		if err1 != nil {
@@ -70,8 +73,10 @@ func main() {
 			fmt.Println("Exists")
 			http.ServeFile(w, r, "html/login.html")
 		} else {
+			hash := sha512.Sum512([]byte(name + password))
+			hashedPassword := hex.EncodeToString(hash[:])
 			fmt.Println("new user ", name)
-			_, err := db.Exec("insert into USER(ID, LOGIN, PASSWORD, RANK) values (1, $1, $2, 0)", name, password)
+			_, err := db.Exec("insert into USER(ID, LOGIN, PASSWORD, RANK) values (1, $1, $2, 0)", name, hashedPassword)
 			if err != nil {
 				panic(err)
 			} else {
@@ -97,12 +102,16 @@ func main() {
 			if err3 != nil {
 				panic(err3)
 			}
-			if cellContent != password {
+
+			hash := sha512.Sum512([]byte(name + password))
+			hashedPassword := hex.EncodeToString(hash[:])
+
+			if hashedPassword != cellContent {
 				http.ServeFile(w, r, "html/login.html")
 			}
 			cookie := http.Cookie{
 				Name:  "name",
-				Value: name,
+				Value: hashedPassword,
 				Path:  "/",
 			}
 			http.SetCookie(w, &cookie)
@@ -129,7 +138,7 @@ func main() {
 		var UserName = cookie.Value
 		fmt.Println(UserName)
 		var cnt = 0
-		err5 := db.QueryRow("SELECT RANK FROM USER WHERE LOGIN = $1", UserName).Scan(&cnt)
+		err5 := db.QueryRow("SELECT RANK FROM USER WHERE PASSWORD = $1", UserName).Scan(&cnt)
 		fmt.Println(cnt)
 		cnt++
 		if err5 != nil {
@@ -140,7 +149,7 @@ func main() {
 		}
 		fmt.Println(UserName)
 		fmt.Println(cnt)
-		_, err6 := db.Exec("UPDATE USER SET RANK = $1 WHERE LOGIN = $2", cnt, UserName)
+		_, err6 := db.Exec("UPDATE USER SET RANK = $1 WHERE PASSWORD = $2", cnt, UserName)
 		if err6 != nil {
 			panic(err6)
 		} else {
