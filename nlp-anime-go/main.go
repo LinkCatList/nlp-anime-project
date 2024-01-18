@@ -11,6 +11,9 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"strings"
+	"time"
+	"unicode"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -19,6 +22,10 @@ type User struct {
 	Login string
 	Rank  int
 	Id    int
+}
+type Data struct {
+	Val  []string `json:"lables"`
+	Data []int    `json:"data"`
 }
 
 func CorrectLogin(s string) string {
@@ -29,6 +36,21 @@ func CorrectLogin(s string) string {
 		}
 	}
 	return t
+}
+
+func generateLineItems() Data {
+	var items Data
+	items.Data = append(items.Data, 1)
+	items.Data = append(items.Data, 2)
+	items.Data = append(items.Data, 1)
+	items.Data = append(items.Data, 3)
+
+	items.Val = append(items.Val, "1")
+	items.Val = append(items.Val, "2")
+	items.Val = append(items.Val, "3")
+	items.Val = append(items.Val, "4")
+
+	return items
 }
 
 func main() {
@@ -42,6 +64,14 @@ func main() {
 	if err != nil {
 		panic(err)
 		fmt.Println(ok.LastInsertId())
+	} else {
+		fmt.Println("OK")
+	}
+
+	ok2, err2 := db.Exec("CREATE TABLE IF NOT EXISTS QUERIES(LOGIN TEXT, DATE TEXT);")
+	if err2 != nil {
+		fmt.Println("error while create db queries")
+		fmt.Println(ok2)
 	} else {
 		fmt.Println("OK")
 	}
@@ -139,6 +169,12 @@ func main() {
 		fmt.Println(UserName)
 		var cnt = 0
 		err5 := db.QueryRow("SELECT RANK FROM USER WHERE PASSWORD = $1", UserName).Scan(&cnt)
+		_, err228 := db.Exec("insert into QUERIES(LOGIN, DATE) values ($1, $2)", UserName, time.Now())
+		if err228 != nil {
+			panic(err228)
+		} else {
+			fmt.Println("OK insert into Queries")
+		}
 		fmt.Println(cnt)
 		cnt++
 		if err5 != nil {
@@ -172,31 +208,17 @@ func main() {
 		}
 
 		defer resp.Body.Close()
-		var res map[string]interface{}
+		var res map[string]string
 		json.NewDecoder(resp.Body).Decode(&res)
 		fmt.Println(res["key"])
-
-		if res["key"] == "Hentai" {
-			http.ServeFile(w, r, "html/hentai.html")
-		} else if res["key"] == "Comedy" {
-			http.ServeFile(w, r, "html/comedy.html")
-		} else if res["key"] == "Kids" {
-			http.ServeFile(w, r, "html/kids.html")
-		} else if res["key"] == "Drama" {
-			http.ServeFile(w, r, "html/drama.html")
-		} else if res["key"] == "Adventure" {
-			http.ServeFile(w, r, "html/adventure.html")
-		} else if res["key"] == "Fantasy" {
-			http.ServeFile(w, r, "html/fantasy.html")
-		} else if res["key"] == "Sci-Fi" {
-			http.ServeFile(w, r, "html/scifi.html")
-		} else if res["key"] == "Music" {
-			http.ServeFile(w, r, "html/music.html")
-		} else if res["key"] == "Slice" {
-			http.ServeFile(w, r, "html/slice.html")
-		} else if res["key"] == "Action" {
-			http.ServeFile(w, r, "html/action.html")
+		tmp := ""
+		for _, val := range res["key"] {
+			if unicode.IsLetter(val) {
+				tmp += string(val)
+			}
 		}
+		path := "html/" + strings.ToLower(tmp) + ".html" // если перестанет работать то виноват терминейт!!!!!
+		http.ServeFile(w, r, path)
 	})
 	h1 := func(w http.ResponseWriter, r *http.Request) {
 		templ := template.Must(template.ParseFiles("html/lederboard.html"))
@@ -234,8 +256,61 @@ func main() {
 		fmt.Println(anime)
 		templ.Execute(w, anime)
 	}
-
 	http.HandleFunc("/raiting", h1)
+
+	h2 := func(w http.ResponseWriter, r *http.Request) {
+		templ := template.Must(template.ParseFiles("html/profile.html"))
+		cookie, _ := r.Cookie("name")
+		fmt.Println(cookie.Value)
+		var Name string
+		err := db.QueryRow("SELECT LOGIN FROM USER WHERE PASSWORD = $1", cookie.Value).Scan(&Name)
+		if err != nil {
+			fmt.Println("not ok")
+		}
+		var Rnk int
+		err2 := db.QueryRow("SELECT RANK FROM USER WHERE PASSWORD = $1", cookie.Value).Scan(&Rnk)
+		if err2 != nil {
+			fmt.Println("not ok")
+		}
+		var People User
+		People.Login = Name
+		People.Rank = Rnk
+		templ.Execute(w, People)
+	}
+	http.HandleFunc("/profile", h2)
+
+	h3 := func(w http.ResponseWriter, r *http.Request) {
+		cookie, _ := r.Cookie("name")
+		rows, err := db.Query("SELECT `DATE` FROM QUERIES WHERE LOGIN = $1", cookie.Value)
+		if err != nil {
+			fmt.Println("error while get dates from queries db")
+		}
+		defer rows.Close()
+		var items []string
+		for rows.Next() {
+			var it string
+			if err := rows.Scan(&it); err != nil {
+				fmt.Println(err)
+			}
+			items = append(items, it[:10])
+		}
+		fmt.Println(items)
+		var a Data
+		mp := make(map[string]int)
+		for _, val := range items {
+			mp[val]++
+		}
+		for key, val := range mp {
+			a.Val = append(a.Val, key)
+			a.Data = append(a.Data, val)
+		}
+		fmt.Println(a)
+		data, _ := json.Marshal(a)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(data)
+	}
+	http.HandleFunc("/get_data", h3)
+
 	fmt.Println("Server is listening...")
 	http.ListenAndServe(":"+"8000", nil)
 }

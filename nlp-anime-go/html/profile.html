@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en" class="h-100" data-bs-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/cover/">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://go-echarts.github.io/go-echarts-assets/assets/echarts.min.js"></script>
+    <script src="https://go-echarts.github.io/go-echarts-assets/assets/themes/infographic.js"></script>
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+        .container {margin-top:30px; display: flex;justify-content: center;align-items: center;}
+        .item {margin: auto;}
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+        .line{
+          position:absolute;
+          border: 1px solid black;
+        }
+        body {
+            background: url("https://avatars.dzeninfra.ru/get-zen_doc/3964212/pub_62209ab1c02b7725797de91a_6220e51d27ff833e1e0f5646/scale_1200");
+            object-fit: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            /* display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; padding: 0; */
+          }
+          
+          body:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.692);
+            z-index: 2;
+            backdrop-filter: blur(15px);
+          }
+          
+          .inner {
+            z-index: 3;
+          }
+
+          .avatar{
+          border-radius: 20px;
+          }
+          #requestsChartWidget {
+            height: 100 ;
+            max-width: 500px;
+            margin-top: 0;
+          }
+    </style>
+</head>
+
+<body class="d-flex h-100 text-center text-white">
+  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column inner" style="height: 700px !important;">
+        <header class="mb-auto">
+            <div>
+                <h3 onclick="return location.href = '/'" class="float-md-start mb-0">🍉Watermelon</h3>
+                <nav class="nav nav-masthead justify-content-center float-md-end">
+                    <a class="nav-link" href="/zalupa_slonika">Search</a>
+                    <a class="nav-link" href="/raiting">Rating</a>
+                    <a class="nav-link" href="/login">Log In</a>
+                    <a class="nav-link active" aria-current="page" href="#">Profile</a>
+                </nav>
+            </div>
+        </header>
+        <tr>
+          <div class="container">
+            <div style="height: 600px; display: flex; flex-direction: column; align-items: center;">
+                <img src="https://anime-star.ru/wp-content/uploads/2021/11/Anime-avatarki-dlya-stima-topovaya-kollektsiya_03-1024x1024.jpg" class="avatar" width="20%">
+                <p>Login {{ .Login}}</p>
+                <p>Rank {{ .Rank}}</p>
+                <div>
+                  <canvas id="myChart" width="500" height="300"></canvas>
+                </div>
+            </div>
+        <footer class="mt-auto text-white-50">
+        </footer>
+    </div>
+    <script type="text/javascript">
+      fetch('http://localhost:8000/get_data')
+      .then(response => response.json())
+      .then(data => {
+      console.log(data)
+      const ctx = document.getElementById('myChart').getContext('2d');
+      const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.lables,
+          datasets: [{
+            label: 'Requests count',
+            data: data.data,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              ticks: {
+              beginAtZero: true,
+              callback: function(value) {if (value % 1 === 0) {return value;}}
+            }
+            }
+          }
+        }
+      });
+    });
+      
+    </script>
+</body>
+</html>
