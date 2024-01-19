@@ -260,7 +260,10 @@ func main() {
 
 	h2 := func(w http.ResponseWriter, r *http.Request) {
 		templ := template.Must(template.ParseFiles("html/profile.html"))
-		cookie, _ := r.Cookie("name")
+		cookie, err1 := r.Cookie("name")
+		if err1 != nil {
+			http.ServeFile(w, r, "html/register.html")
+		}
 		fmt.Println(cookie.Value)
 		var Name string
 		err := db.QueryRow("SELECT LOGIN FROM USER WHERE PASSWORD = $1", cookie.Value).Scan(&Name)
