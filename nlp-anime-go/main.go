@@ -259,26 +259,28 @@ func main() {
 	http.HandleFunc("/raiting", h1)
 
 	h2 := func(w http.ResponseWriter, r *http.Request) {
-		templ := template.Must(template.ParseFiles("html/profile.html"))
 		cookie, err1 := r.Cookie("name")
+		fmt.Println(err1)
 		if err1 != nil {
-			http.ServeFile(w, r, "html/register.html")
+			http.ServeFile(w, r, "html/login.html")
+			return
+		} else {
+			templ := template.Must(template.ParseFiles("html/profile.html"))
+			var Name string
+			err := db.QueryRow("SELECT LOGIN FROM USER WHERE PASSWORD = $1", cookie.Value).Scan(&Name)
+			if err != nil {
+				fmt.Println("not ok")
+			}
+			var Rnk int
+			err2 := db.QueryRow("SELECT RANK FROM USER WHERE PASSWORD = $1", cookie.Value).Scan(&Rnk)
+			if err2 != nil {
+				fmt.Println("not ok")
+			}
+			var People User
+			People.Login = Name
+			People.Rank = Rnk
+			templ.Execute(w, People)
 		}
-		fmt.Println(cookie.Value)
-		var Name string
-		err := db.QueryRow("SELECT LOGIN FROM USER WHERE PASSWORD = $1", cookie.Value).Scan(&Name)
-		if err != nil {
-			fmt.Println("not ok")
-		}
-		var Rnk int
-		err2 := db.QueryRow("SELECT RANK FROM USER WHERE PASSWORD = $1", cookie.Value).Scan(&Rnk)
-		if err2 != nil {
-			fmt.Println("not ok")
-		}
-		var People User
-		People.Login = Name
-		People.Rank = Rnk
-		templ.Execute(w, People)
 	}
 	http.HandleFunc("/profile", h2)
 
