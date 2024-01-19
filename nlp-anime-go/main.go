@@ -317,7 +317,7 @@ func main() {
 	http.HandleFunc("/get_data", h3)
 
 	fmt.Println("Server is listening...")
-	http.ListenAndServe(":"+"8000", nil)
+	http.ListenAndServe(":"+"3001", nil)
 }
 
 /*
