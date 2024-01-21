@@ -1,10 +1,10 @@
 <div align="center">
-<img src="https://ico.cppng.com/download/2119/anime_girl_PNG68.png" width="50%">
+<img src="https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/tyano4ka.png" width="50%">
 
 ### **A neural network that allows you to find the anime genre by its description🌸**
 <br>
 </div>
-<img src="https://i.postimg.cc/g2KtqGxr/very-Important.png" width="40%" align="right">
+<img src="https://github.com/LinkCatList/nlp-anime-project/blob/main/pic/veryImportant.png" width="40%" align="right">
 
 # Description🌸
 
